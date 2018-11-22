@@ -1,13 +1,31 @@
 /*
-Serial input main ref: Serial Input Basics by Robin2 in Arduino Forum 
+ * Use Arduino Nano to control DRV8825 or A4988 stepper motor driver boards
+ * DRV8825 - https://www.pololu.com/product/2133
+ * A4988 - Big Easy Driver from Sparkfun -  https://www.sparkfun.com/products/12859
+ * Serial input main ref: Serial Input Basics by Robin2 in Arduino Forum 
 */
 
+/* serial command interface documentation
+Command format: [text,value]
+Commands start with [, and end with ]
+A comma , separates text field and value field
+
+Implemented commands
+[hello]
+[MV,n]
+[BLINK,n]
+
+TODO:
+query commands
+
+end of command interface documentation */
+
 // global variables for stepper motor driver board
-int M0_PIN=8; // Pin D8 is addressed at 8
-int M1_PIN=9; //
-int M2_PIN=10; //
-int STEP_PIN=11; //
-int DIR_PIN=12; //
+int M0_PIN=11; // Pin D8 is addressed at 8
+int M1_PIN=10; //
+int M2_PIN=9; //
+int STEP_PIN=8; //
+int DIR_PIN=7; //
 
 int CW=HIGH;
 int CCW=LOW;
@@ -36,6 +54,7 @@ void setup() { // put your setup code here, to run once:
   pinMode(M0_PIN,OUTPUT);
   pinMode(M1_PIN,OUTPUT);
   pinMode(M2_PIN,OUTPUT);
+  pinMode(BLINK_PIN,OUTPUT);
 }
 
 void loop() { // put your main code here, to run repeatedly:
@@ -138,7 +157,8 @@ void DIR(int DIR_PIN, int n) {
 
 void STEP(int M0_PIN,int M1_PIN,int M2_PIN,int n) {
   /*
-  Microstepping: M0,M1,M2 Pin values
+  Microstepping using DRV8825
+  Step size: M0,M1,M2 Pin values
   Full: LOW,LOW,LOW
   Half: HIGH,LOW,LOW
   1/4: LOW,HIGH,LOW
@@ -200,18 +220,3 @@ void BLINK(int BLINK_PIN, int n) {
     delay(wait_time);
   }
 }
-
-/* serial command interface documentation
-Command format: [text,value]
-Commands start with [ and end with ]
-A comma , separates text field and value field
-
-[hello]
-[MV,n]
-[BLINK,n]
-
-TODO:
-query commands
-
-end of command interface documentation */
-
