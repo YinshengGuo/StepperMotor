@@ -6,8 +6,8 @@ The codes in xx file controls DRV8825 and A4988 for driving bipolar stepper moto
 ## Notes
 
 TODO: 
-Add Arduino code to drive ULN2803A Darlington arrays to control unipolar stepper motors.
-Add Arduino code to drive L293D  
+Add Arduino code to drive ULN2803A Darlington arrays to control unipolar stepper motors. <br>
+Add Arduino code to drive L293D. <br>
 
 ## Author
 
