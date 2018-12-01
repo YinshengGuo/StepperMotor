@@ -1,8 +1,11 @@
 /*
- * Use Arduino to control unipolar stepper motor
- * Arduino Nano - ULN2803 - Unipolar Stepper Motor 
+ * Use Arduino to control unipolar stepper motors for STM coarse approach
+ * Arduino Nano - ULN2803 - 3*Unipolar Stepper Motor 
  * 
- * Yinsheng Guo, 20181130
+ * During the coarse approach, the 3 motors consecutively step forward or backward,
+ * to move the sample holder toward or away from the tip.
+ * 
+ * Yinsheng Guo, 20181201
  * 
  * Reference:
  * https://www.arduino.cc/en/Reference/Stepper
@@ -65,16 +68,32 @@ boolean flag_comm=false; // true when one complete command is received
 // Stepper: set up steps per revolution and Arduino control pins
 #define stepsPerRev 400 // check this value for the motor in use
 // initialize the stepper library on pins 2 through 5
-#define M0 2
-#define M1 3
-#define M2 4
-#define M3 5
-#define BLINK_PIN 13
-Stepper myMotor(stepsPerRev,M0,M1,M2,M3);
+#define MA0 12 // Motor A Pin 0
+#define MA1 11
+#define MA2 10
+#define MA3 9
+
+#define MB0 8
+#define MB1 7
+#define MB2 6
+#define MB3 5
+
+#define MC0 4
+#define MC1 3
+#define MC2 2
+#define MC3 13
+
+//#define BLINK_PIN 13
+Stepper MotorA(stepsPerRev,MA0,MA1,MA2,MA3);
+Stepper MotorB(stepsPerRev,MB0,MB1,MB2,MB3);
+Stepper MotorC(stepsPerRev,MC0,MC1,MC2,MC3);
 
 void setup() { // put your setup code here, to run once:
-  myMotor.setSpeed(30); // set the speed at 30 rpm
-  pinMode(BLINK_PIN,OUTPUT);
+  int motor_speed=30; // rpm
+  MotorA.setSpeed(motor_speed); // set the speed at 30 rpm
+  MotorB.setSpeed(motor_speed); // set the speed at 30 rpm
+  MotorC.setSpeed(motor_speed); // set the speed at 30 rpm
+  //pinMode(BLINK_PIN,OUTPUT);
   Serial.begin(115200);
   Serial.println("Serial Comm w/ Arduino Initialized.");
 }
@@ -134,7 +153,8 @@ void Parse_Comm() {
 
 void Exec_Comm() {
   if (strcmp(txt_comm,"MV")==0) {
-    myMotor.step(val_integer);
+    //myMotor.step(val_integer);
+    MOVE(val_integer);
     Serial.println("MV command executed.");
   }
   else if (strcmp(txt_comm,"hello")==0) { // txt_comm=="yellow" does not work
@@ -144,29 +164,40 @@ void Exec_Comm() {
     REST();
     Serial.println("OFF received.");
   }
-  else if (strcmp(txt_comm,"BLINK")==0) {
-    Serial.println("blinking.");
-    BLINK(val_integer);
-  }
+//  else if (strcmp(txt_comm,"BLINK")==0) {
+//    Serial.println("blinking.");
+//    BLINK(val_integer);
+//  }
   else { 
     Serial.println("Exec_Comm(): Command not recognized.");
   }
 }
 
-void REST(){
-  // turn off holding torque
-  digitalWrite(M0,LOW);
-  digitalWrite(M1,LOW);
-  digitalWrite(M2,LOW);
-  digitalWrite(M3,LOW);
-}
-
-void BLINK(int n) {
-  int wait_time=1000;
-  for (int i=0;i<n;i++) {
-    digitalWrite(BLINK_PIN,HIGH);
+void MOVE(int n){
+  int wait_time=1; // ms
+  for (int i=0; i<n; i++){
+    MotorA.step(1);
     delay(wait_time);
-    digitalWrite(BLINK_PIN,LOW);
+    MotorB.step(1);
+    delay(wait_time);
+    MotorC.step(1);
     delay(wait_time);
   }
 }
+void REST(){
+  // turn off holding torque
+  digitalWrite(MA0,LOW);
+  digitalWrite(MA1,LOW);
+  digitalWrite(MA2,LOW);
+  digitalWrite(MA3,LOW);
+}
+
+//void BLINK(int n) {
+//  int wait_time=1000;
+//  for (int i=0;i<n;i++) {
+//    digitalWrite(BLINK_PIN,HIGH);
+//    delay(wait_time);
+//    digitalWrite(BLINK_PIN,LOW);
+//    delay(wait_time);
+//  }
+//}
