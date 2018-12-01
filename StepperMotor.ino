@@ -2,10 +2,11 @@
  * Use Arduino Nano to control DRV8825 or A4988 stepper motor driver boards
  * DRV8825 - https://www.pololu.com/product/2133
  * A4988 - Big Easy Driver from Sparkfun -  https://www.sparkfun.com/products/12859
- * Serial input main ref: Serial Input Basics by Robin2 in Arduino Forum 
 */
 
-/* serial command interface documentation
+/* Serial Command Interface Documentation
+ * Main ref: Serial Input Basics by Robin2 in Arduino Forum
+ * 
 Command format: [text,value]
 Commands start with [, and end with ]
 A comma , separates text field and value field
@@ -18,7 +19,8 @@ Implemented commands
 TODO:
 query commands
 
-end of command interface documentation */
+end of command interface documentation 
+*/
 
 // global variables for stepper motor driver board
 int M0_PIN=11; // Pin D8 is addressed at 8
