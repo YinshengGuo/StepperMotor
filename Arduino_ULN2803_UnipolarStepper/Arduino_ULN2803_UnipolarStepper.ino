@@ -65,10 +65,10 @@ boolean flag_comm=false; // true when one complete command is received
 // Stepper: set up steps per revolution and Arduino control pins
 #define stepsPerRev 400 // check this value for the motor in use
 // initialize the stepper library on pins 2 through 5
-#define M0 2
-#define M1 3
-#define M2 4
-#define M3 5
+#define M0 12
+#define M1 11
+#define M2 10
+#define M3 9
 #define BLINK_PIN 13
 Stepper myMotor(stepsPerRev,M0,M1,M2,M3);
 
